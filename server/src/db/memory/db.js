@@ -52,7 +52,6 @@ const InMemoryDb = function({
             itemMatchWithCriteria = false
           }
         } else if (filterCriteria[resourceFieldName]) {
-          console.log(filterCriteria, resourceFieldName)
           // it is an Object
           if (filterCriteria[resourceFieldName].operation == OPERATIONS.GT) {
             if (!(data[resource][key] > filterCriteria[resourceFieldName].value)) {

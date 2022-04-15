@@ -57,8 +57,8 @@ const generateUser = () => {
 const RESERVATION_COUNT = 16
 
 const generateReservation = (users, bikes, reservations) => {
-  const userId = users[Object.keys(users)[faker.datatype.number(Object.keys(users).length)]]
-  const bikeId = bikes[Object.keys(bikes)[faker.datatype.number(Object.keys(bikes).length)]]
+  const userId = users[Object.keys(users)[faker.datatype.number(Object.keys(users).length - 1)]].id
+  const bikeId = bikes[Object.keys(bikes)[faker.datatype.number(Object.keys(bikes).length - 1)]].id
   return {
     id: uuidv4(),
     userId,
@@ -85,7 +85,13 @@ const generateMockedDatabase = () => {
     data[RESOURCES.BIKES][bike.id] = bike
   }
 
-  for (let i = 0; i < USERS_COUNT; i++) {
+  data[RESOURCES.USERS]['12345'] = {
+    id: '12345',
+    username: 'fede',
+    password: 'password',
+    rol: 'manager'
+  }
+  for (let i = 1; i < USERS_COUNT; i++) {
     const user = generateUser()
     data[RESOURCES.USERS][user.id] = user
   }
