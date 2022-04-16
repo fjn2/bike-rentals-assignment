@@ -41,18 +41,32 @@ router.post('/login', async (req, res, next) => {
   if (resp.data.length === 1) {
     const token = await securitySvcInstance.grant(resp.data[0].id)
     res.send({
-      data: token,
+      data: {
+        token,
+        user: resp.data[0]
+      },
       status: 200
     })
     return
   } else {
     if (resp.data.length === 0) {
-      next(new Error('INVALID_CREDENTIALS'))
+      res.status(401).send({
+        errors: ['Invalid Credentials'],
+        status: 401
+      })
     } else {
       next(new Error('MULTIPLE_USERS')) // more than one user has the same credentials
     }
   }
   
+})
+
+router.post('/logout', async (req, res) => {
+  const tokenExists = await securitySvcInstance.revoke(req.body.token)
+  res.send({
+    data: tokenExists,
+    status: 200
+  })
 })
 
 module.exports = router

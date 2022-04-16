@@ -1,5 +1,6 @@
 import styled from "styled-components"
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import useApplication from "../hooks/useApplication"
 
 const Wrapper = styled.div`
   display: flex;
@@ -7,22 +8,35 @@ const Wrapper = styled.div`
   align-items: center;
   height: 100%;
 `
+const ErrorMessages = styled.div`
+  color: var(--error)
+`
 
-const LoginForm = ({ onLogin, errors = [] }) => {
+const LoginForm = () => {
+  const [errors, setErrors] = useState([])
   const [username, setUsername] = useState('John')
   const [password, setPassword] = useState('password')
+  const [, { login }] = useApplication()
 
   const loginHandler = () => {
-    onLogin({
+    login({
       username,
       password
+    }).catch((error) => {
+      console.log('error', error, error.data)
+      setErrors(error.data)
     })
   }
+
+  useEffect(() => {
+    setErrors([])
+  }, [username, password])
 
   return (
     <Wrapper>
       <form>
-        <div className="errors">{errors}</div>
+        <h1>Login</h1>
+        <ErrorMessages className="errors">{errors}</ErrorMessages>
         <label for="username">Username:</label><br />
         <input
           value={username}

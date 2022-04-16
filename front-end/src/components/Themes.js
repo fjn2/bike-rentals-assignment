@@ -8,6 +8,8 @@ export const lightTheme = {
   primary2: '#9B9600',
   primary3: '#656200',
   primary4: '#464400',
+  menuBackground: '#fafafa',
+  error: '#B00020'
 }
 
 export const darkTheme = {
@@ -19,4 +21,6 @@ export const darkTheme = {
   primary2: '#717041',
   primary3: '#5C5A19',
   primary4: '#454308',
+  menuBackground: '#000c17',
+  error: '#CF6679'
 }

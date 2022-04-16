@@ -2,22 +2,27 @@ const securitySvc = require('../services/securitySvc')
 const userSvc = require('../services/userSvc')
 
 const securitySvcInstance = new securitySvc()
-const userSvcInstance = new userSvc()
 
 /**
  * 
  * @param {string} securityLevel "manager" or "user"
  */
 const securityMiddleware = (securityLevel) => (req, res, next) => {
-  securitySvcInstance.isValid(req.header.authentication).then((userId) => {
+  securitySvcInstance.isValid(req.headers.authentication).then((userId) => {
     if (!userId) {
-      next('NOT_LOGGED_IN')
+      res.status(401).send({
+        errors: ['Access not allowed'],
+        status: 401
+      })
       return
     }
     if (securityLevel === 'manager') {
       userSvc.getById(userId).then((user) => {
         if (user.rol !== 'manager') {
-          next('NOT_ACCESS')
+          res.status(401).send({
+            errors: ['You have to be manager to access this'],
+            status: 401
+          })
           return
         }
         next()

@@ -16,6 +16,10 @@ export const GlobalStyles = createGlobalStyle`
     height: 100vh;
   }
   
+  button {
+    color: inherit;
+  }
+  
   #root {
     height: 100%;
   }

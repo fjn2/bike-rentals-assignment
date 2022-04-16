@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 import useUserListPage from "../hooks/useUserListPage"
 import { Rol } from '../api/types'
+import MenuComponent from './MenuComponent'
 
 const Wrapper = styled.table`
   border-collapse: collapse;
@@ -63,6 +64,7 @@ const UserListPage = () => {
             })
           }
         </tbody>
+        <MenuComponent />
       </Wrapper>
     </>
   )

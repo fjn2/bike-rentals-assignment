@@ -1,3 +1,4 @@
+const debug = require('debug')('app:DB')
 const { v4: uuidv4 } = require('uuid');
 const generateMockedData = require('./_initialMockedData')
 const RESOURCES = require('./resources')
@@ -7,7 +8,8 @@ const DEFAULT_OFFSET = 0
 
 const OPERATIONS = {
   GT: 'gt',
-  LT: 'lt'
+  LT: 'lt',
+  LIKE: 'like'
 }
 
 const initialDbStructure = {
@@ -22,12 +24,15 @@ const InMemoryDb = function({
   console.log('InMemoryDb - initialization')
   const data = withMockedData ? generateMockedData() : initialDbStructure;
 
-  this.create = async (resource, data) => {
+  this.create = async (resource, newItem) => {
+    debug('create', resource, newItem)
     const id = uuidv4()
     data[resource][id] = {
       id,
-      ...data
+      ...newItem
     }
+
+    return data[resource][id]
   }
 
   this.update = async (resource, id, data) => {
@@ -43,6 +48,7 @@ const InMemoryDb = function({
   }
 
   this.getList = async (resource, filterCriteria, pagination = {}) => {
+    debug('getList', resource, filterCriteria, pagination)
     const allItemsKeys = Object.keys(data[resource]).filter((key) => {
       let itemMatchWithCriteria = true
       Object.keys(filterCriteria).forEach((resourceFieldName) => {
@@ -61,8 +67,12 @@ const InMemoryDb = function({
             if (!(data[resource][key] < filterCriteria[resourceFieldName].value)) {
               itemMatchWithCriteria = false
             }
+          } else if (filterCriteria[resourceFieldName].operation == OPERATIONS.LIKE) {
+            if (!(data[resource][key][resourceFieldName].indexOf(filterCriteria[resourceFieldName].value) > -1)) {
+              itemMatchWithCriteria = false
+            }
           } else {
-            // OPERATION NOT IMPLEMENTED
+            debug(`The operation "${filterCriteria[resourceFieldName].operation}" is not supported`)
           }
         }
       })
@@ -71,8 +81,7 @@ const InMemoryDb = function({
     return {
       data: allItemsKeys.map(key => data[resource][key]).slice(
         pagination.offset || DEFAULT_OFFSET,
-        pagination.count || DEFAULT_PAGE_SIZE
-        ),
+        (pagination.offset || DEFAULT_OFFSET) + pagination.count || DEFAULT_PAGE_SIZE),
       meta: {
         total: allItemsKeys.length,
         offset: pagination.offset || DEFAULT_OFFSET,

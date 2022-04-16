@@ -11,7 +11,12 @@ const reservationSvc = function() {
       meta: resp.meta
     }
   }
-
+  this.createReservation = async (data) => {
+    const resp = await getInstance().create(RESOURCE_NAME, data)
+    return {
+      data: resp
+    }
+  }
   return this
 }
 

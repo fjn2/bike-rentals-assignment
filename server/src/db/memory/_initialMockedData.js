@@ -64,7 +64,8 @@ const generateReservation = (users, bikes, reservations) => {
     userId,
     bikeId,
     from: faker.date.future(),
-    days: faker.datatype.number(20)
+    days: faker.datatype.number(20),
+    rating: undefined
   }
 }
 

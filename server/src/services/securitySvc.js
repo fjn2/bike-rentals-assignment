@@ -17,7 +17,9 @@ const securitySvc = function() {
 
   this.revoke = async (token) => {
     const userToLogout = Object.keys(tokens).find(key => tokens[key] === token)
+    const tokenExists = !!tokens[userToLogout]
     delete tokens[userToLogout]
+    return tokenExists
   }
 
   return this

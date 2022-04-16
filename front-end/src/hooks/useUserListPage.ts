@@ -11,8 +11,8 @@ const useUserListPage = () => {
   }
 
   useEffect(() => {
-    getFirstPage().then(({ resp, meta }) => {
-      setUsers(resp)
+    getFirstPage().then(({ data, meta }) => {
+      setUsers(data)
       setMeta(meta)
     })
   }, [])

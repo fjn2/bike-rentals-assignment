@@ -24,7 +24,7 @@ export type Metadata = {
 }
 
 export type PaginatedObject<T> = {
-  resp: T[],
+  data: T[],
   meta: Metadata
 }
 
@@ -43,4 +43,26 @@ export type ApiOperation = {
   result: OperationResult,
   messages: string[],
   error?: string[]
+}
+
+export type Pagination = {
+  offset: number,
+  total: number,
+  count: number
+}
+
+export type BikeFilters = {
+  available?: boolean,
+  model?: string,
+  color?: string,
+  rating?: number,
+}
+
+export type Reservation = {
+  id: string,
+  bike: Bike,
+  user: User,
+  from: string,
+  days: number,
+  rating: number
 }

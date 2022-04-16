@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBicycle } from '@fortawesome/free-solid-svg-icons'
-import { Bike } from '../api/types'
+import { Reservation } from '../api/types'
 import RatingComponent from './RatingComponent'
 
 const Wrapper = styled.div`
@@ -62,42 +62,21 @@ border: 1px solid;
   right: 0;
 }
 `
-const BikeCard = ({bike, onReserve}: { bike: Bike, onReserve: (dateFrom: string | undefined, daysAmount: number | undefined) => void }) => {
+const ReservationCard = ({reservation, onReserve}: { reservation: Reservation, onReserve: () => void }) => {
   const [active, setActive] = useState(false)
-  const [dateFrom, setDateFrom] = useState<string | undefined>()
-  const [daysAmount, setDaysAmount] = useState<number | undefined>(1)
-
   return (
     <Wrapper className={active ? 'active' : ''}>
       <div className="flip-card-inner">
         <div className="flip-card-front" onClick={() => setActive(!active)}>
-          <h3>{bike.model}</h3>
-          <a title={bike.color}>
-            <FontAwesomeIcon icon={faBicycle} color={bike.color} size="2x" />
+          <h3>{reservation.bike.model}</h3>
+          <a title={reservation.bike.color}>
+            <FontAwesomeIcon icon={faBicycle} color={reservation.bike.color} size="2x" />
           </a>
-          <RatingComponent total={5} selected={bike.rating} />
-          <p>{bike.location.description}</p>
+          <RatingComponent total={5} selected={reservation.bike.rating} />
+          <p>{reservation.bike.location.description}</p>
         </div>
         <div className="flip-card-back">
-          <div>
-            <label>Date from: &nbsp;</label>
-            <input
-              type="date"
-              min={new Date().toISOString()}
-              onChange={(e) => { setDateFrom(e.target.value)}}
-            />
-            <br />
-            <label>Days amount: &nbsp;</label>
-            <input
-              type="number"
-              max={30}
-              defaultValue={1}
-              style={{ width: '20px' }}
-              onChange={e => setDaysAmount(+e.target.value)}
-            />
-            <br />
-            <button className="reserve-button" onClick={() => onReserve(dateFrom, daysAmount)}>Reserve</button>
-          </div>
+          <button className="reserve-button" onClick={onReserve}>Cancel reservation</button>
           <button className="turn-back-card" onClick={() => setActive(!active)}>Turn back</button>
         </div>
       </div>
@@ -105,4 +84,4 @@ const BikeCard = ({bike, onReserve}: { bike: Bike, onReserve: (dateFrom: string 
   )
 }
 
-export default BikeCard
+export default ReservationCard

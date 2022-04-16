@@ -6,7 +6,7 @@ const { securityMiddleware } = require('./security')
 
 const reservationSvcInstance = new reservationSvc()
 
-router.use(securityMiddleware('user'))
+// router.use(securityMiddleware('user'))
 
 router.get('/', async (req, res) => {
   const {
@@ -21,8 +21,18 @@ router.get('/', async (req, res) => {
   }))
 })
 
-router.post('/', async (req, res) => {
+router.post('/', async (req, res, next) => {
   // create reservation
+  const resp = await reservationSvcInstance.createReservation(req.body)
+
+  if (resp.data.id) {
+    res.status(201).send({
+      data: resp.data,
+      status: 201
+    })
+  } else {
+    next('ENTITY_NOT_CREATED')
+  }
 })
 
 router.delete('/', async (req, res) => {
