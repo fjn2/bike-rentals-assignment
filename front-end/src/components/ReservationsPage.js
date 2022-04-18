@@ -1,40 +1,50 @@
 import styled from 'styled-components'
 import ReservationCard from "./ReservationCard"
-import { useState, useCallback, useEffect } from 'react'
-import { debounce } from '../utils'
+import { useEffect, useCallback } from 'react'
 import NoResultPage from './NoResultsPage'
 import MenuComponent from './MenuComponent'
 import useReservationListPage from '../hooks/useReservationListPage'
 
 const Wrapper = styled.div`
-  display: flex;
-  flex-direction: row;  
-  overflow: hidden;
+  background: var(--primary2);
+  height: 100%;
 `
 
 const ListItems = styled.div`
-  display: grid;
-  flex: 1;
-  grid-gap: 4px;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
+  height: auto;
+  flex-wrap: wrap;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  gap: 4px;
 
   & > div {
     width: 100%;
+    flex: 0 0 calc((100% - 8px)/3);
   }
 
   @media only screen and (max-width: 768px) {
     /* For mobile phones: */
-    grid-template-columns: repeat(1, 1fr);
+    height: 100%;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    
+    & > div {
+      margin: 4px 0;
+    }
   }
 `
 
 const ReservationsListPage = () => {
-  const [{ reservations, loading }, { nextPage }] = useReservationListPage()
-  const cancelHandler = (bikeId) => () => {
-    console.log('cancel', bikeId)
+  const [{ reservations, loading }, { nextPage, cancelReservation, updateRating }] = useReservationListPage()
+  const cancelHandler = (reservationId) => () => {
+    cancelReservation(reservationId)
+  }
+  const ratingUpdateHandler = (reservationId) => (newVal) => {
+    updateRating(reservationId, newVal)
   }
 
-  const onPageScroll = () => {
+  const onPageScroll = useCallback(() => {
     if (
       document.documentElement.scrollHeight -
         document.documentElement.scrollTop -
@@ -43,7 +53,7 @@ const ReservationsListPage = () => {
     ) {
       nextPage()
     }
-  }
+  }, [nextPage])
   
   useEffect(() => {
     window.addEventListener('scroll', onPageScroll)
@@ -59,23 +69,30 @@ const ReservationsListPage = () => {
   }, [loading])
 
   return (
-    <Wrapper>
-      {
-        reservations && reservations.length === 0 && !loading && (
-          <NoResultPage />
-        )
-      }
-      {reservations && reservations.length > 0 && (
-        <ListItems>
-          {
-            reservations.map((reservation) => (
-              <ReservationCard reservation={reservation} onCancelReservation={cancelHandler(reservation.id)} />
-            ))
-          }
-        </ListItems>
-      )}
-      <MenuComponent />
-    </Wrapper>
+    <>
+      <Wrapper>
+        {
+          reservations && reservations.length === 0 && !loading && (
+            <NoResultPage />
+          )
+        }
+        {reservations && reservations.length > 0 && (
+          <ListItems>
+            {
+              reservations.map((reservation) => (
+                <ReservationCard
+                  key={reservation.id}
+                  reservation={reservation}
+                  onCancelReservation={cancelHandler(reservation.id)}
+                  onUpdateRating={ratingUpdateHandler(reservation.id)}
+                />
+              ))
+            }
+          </ListItems>
+        )}
+        <MenuComponent />
+      </Wrapper>
+    </>
   )
 }
 

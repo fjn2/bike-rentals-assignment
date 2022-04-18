@@ -11,7 +11,6 @@ const db = async (config) => {
   dbInstance = require(`./${SUPPORTED_DBS[config.dbType]}/db`)({
     withMockedData: config.withMockedData
   })
-  
 }
 
 const getInstance = () => {

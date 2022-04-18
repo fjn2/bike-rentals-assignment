@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCoffee, faSignOut, faTicket, faBicycle, faUser, faMagic } from '@fortawesome/free-solid-svg-icons'
+import { faSignOut, faTicket, faBicycle, faUser, faMagic } from '@fortawesome/free-solid-svg-icons'
 import { useNavigate, useLocation } from 'react-router-dom'
 import useApplication from '../hooks/useApplication'
 
@@ -10,6 +10,8 @@ const Wrapper = styled.div`
   left: 0;
   right: 0;
   background: var(--menuBackground);
+  box-shadow: 0px 6px 21px grey;
+
   > ul {
     display: flex;
     list-style-type: none;
@@ -23,7 +25,7 @@ const Wrapper = styled.div`
       height: 65px;
 
       &.active {
-        background: var(--primary1);
+        color: var(--primary0);
       }
 
       button {

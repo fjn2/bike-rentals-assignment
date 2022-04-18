@@ -2,7 +2,7 @@ const securitySvc = require('../services/securitySvc')
 const userSvc = require('../services/userSvc')
 
 const securitySvcInstance = new securitySvc()
-
+const userSvcInstance = new userSvc()
 /**
  * 
  * @param {string} securityLevel "manager" or "user"
@@ -17,7 +17,7 @@ const securityMiddleware = (securityLevel) => (req, res, next) => {
       return
     }
     if (securityLevel === 'manager') {
-      userSvc.getById(userId).then((user) => {
+      userSvcInstance.getById(userId).then((user) => {
         if (user.rol !== 'manager') {
           res.status(401).send({
             errors: ['You have to be manager to access this'],

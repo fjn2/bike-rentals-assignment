@@ -5,20 +5,21 @@ import { faStar } from '@fortawesome/free-solid-svg-icons'
 
 type RatingComponentProps = {
   total: number,
-  selected: number,
+  selected?: number,
   onChange?: (value: number) => void
 }
 
 const Wrapper = styled.div`
+  color: var(--primary2);
 
   & .selected {
-    color: orange;
+    color: var(--primary3);
   }
 `
 
 const RatingComponent = ({
   total,
-  selected,
+  selected = 0,
   onChange
 }: RatingComponentProps) => {
   return (
@@ -26,8 +27,9 @@ const RatingComponent = ({
       {
         Array.from({ length: total }, (val: number, index: number) => (
           <FontAwesomeIcon
+            key={index}
             icon={faStar}
-            onClick={() => { onChange && onChange(val) }}
+            onClick={() => { onChange && onChange(index + 1) }}
             className={index < selected ? 'selected' : ''}
           />
         ))

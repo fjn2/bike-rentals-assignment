@@ -1,72 +1,94 @@
 import styled from 'styled-components'
 import useUserListPage from "../hooks/useUserListPage"
-import { Rol } from '../api/types'
 import MenuComponent from './MenuComponent'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faRemove, faArrowUp, faArrowDown } from '@fortawesome/free-solid-svg-icons'
+import { useState } from 'react'
 
-const Wrapper = styled.table`
-  border-collapse: collapse;
-  border-spacing: 0;
-  width: 100%;
-  border: 1px solid #ddd;
-  tr:nth-child(even){ background-color: var(--primary2) }
+const Wrapper = styled.div `
+  background: var(--primary2);
+  padding-bottom: 66px;
+`
 
-  th, td {
-    text-align: left;
-    padding: 8px;
+const UserCard = styled.div`
+  display: flex;
+  min-height: 35px;
+  margin: 0;
+  line-height: 35px;
+  padding: 8px;
+
+  &:nth-child(even) {
+    background: var(--backgroundSecondary);
+  }
+
+  > *:nth-child(1) {
+    flex: 1;
+  }
+  button {
+    margin: 0 4px;
+  }
+  button.update {
+
+  }
+  button.delete {
+    color: var(--error);
   }
 `
 
 const UserListPage = () => {
-  const [{ users }, { updateUser }] = useUserListPage()
-  
-  const roleHandler = (userId) => (event) => {
+  const [{ users }, { updateUser, createUser, deleteUser }] = useUserListPage()
+
+  const [username, setUserName] =  useState('')
+  const [rol, setRol] =  useState('user')
+
+  const roleHandler = (user) => {
     updateUser({
-      ...users.find(u => u.id === userId),
-      rol: event.target.checked ? Rol.MANAGER : Rol.USER
+      ...user,
+      rol: user.rol === 'user' ? 'manager' : 'user'
     })
   }
 
   const onAddUserClick = () => {
-    
+    createUser({
+      username,
+      rol
+    }).then(() => {
+      setRol('user')
+      setUserName('')
+    })
   }
 
-  console.log('users', users)
+  const onRemoveUserClick = (user) => {
+    deleteUser(user.id)
+  }
+  
   return (
-    <>
-      <h1>
-        Users Administration
-      </h1>
+    <Wrapper>
+      <input value={username} type="text" onChange={(e) => setUserName(e.target.value)} placeholder="username" />
+      <select value={rol} onChange={e => setRol(e.target.value)}>
+        <option value={'user'}>User</option>
+        <option value={'manager'}>Manager</option>
+      </select>
       <input type="button" onClick={onAddUserClick} value="Add user" />
-      <Wrapper>
-        <thead>
-          <tr>
-            <th>
-              Username
-            </th>
-            <th>
-              is Manager?
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {
-            users.map((user) => {
-              return (
-                <tr>
-                  <td>
-                    {user.username}
-                  </td>
-                  <td>
-                    <input type="checkbox" checked={user.rol === Rol.MANAGER} onClick={roleHandler(user.id)} />
-                  </td>
-                </tr>
-              )
-            })
-          }
-        </tbody>
+      <div>
+        {
+          (users || []).map((user) => (
+            <UserCard key={user.id}>
+              <label className="title">
+                {user.username} (<label className="title">{user.rol === 'manager'? 'Manager' : 'User'}</label>)
+              </label>
+              <button className="update" onClick={() => roleHandler(user)}>
+                <FontAwesomeIcon icon={user.rol === 'manager'? faArrowDown : faArrowUp} />
+              </button>
+              <button className="delete" onClick={() => onRemoveUserClick(user)}>
+                <FontAwesomeIcon icon={faRemove} />
+              </button>
+            </UserCard>
+          ))
+        }
         <MenuComponent />
-      </Wrapper>
-    </>
+      </div>
+    </Wrapper>
   )
 }
 

@@ -2,10 +2,13 @@ const { v4: uuidv4 } = require('uuid');
 const { faker } = require('@faker-js/faker')
 const RESOURCES = require('./resources')
 
+const BIKES_COUNT = 50
+const USERS_COUNT = 50
+const RESERVATION_COUNT = 50
 ////////////////////////
 /// MOCK FOR BIKES /////
 ////////////////////////
-const BIKES_COUNT = 24
+
 const LOCATION_CENTER_REFERENCE_POINT = [52.369266, 4.9028] // Amsterdam
 
 const generateBike = () => {
@@ -18,7 +21,7 @@ const generateBike = () => {
     max: ratingVotes * 5,
     min: 0,
   })
-  ratingAcum
+  
   return {
     id: uuidv4(),
     model: faker.vehicle.bicycle(),
@@ -31,17 +34,17 @@ const generateBike = () => {
     ratingAcum,
     ratingVotes,
     // 80% of the bikes are availables
-    available: !faker.datatype.number({
+    available: !(faker.datatype.number({
       max: 100,
       min: 0,
-    }) > 80,
+    }) > 80),
   }
 }
 
 ////////////////////////
 /// MOCK FOR USERS /////
 ////////////////////////
-const USERS_COUNT = 12
+
 const generateUser = () => {
   return {
     id: uuidv4(),
@@ -54,7 +57,6 @@ const generateUser = () => {
 /////////////////////////////
 /// MOCK FOR RESERVATIONS ///
 /////////////////////////////
-const RESERVATION_COUNT = 16
 
 const generateReservation = (users, bikes, reservations) => {
   const userId = users[Object.keys(users)[faker.datatype.number(Object.keys(users).length - 1)]].id

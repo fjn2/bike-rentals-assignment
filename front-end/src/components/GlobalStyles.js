@@ -95,4 +95,16 @@ export const GlobalStyles = createGlobalStyle`
   .slider.round:before {
     border-radius: 50%;
   }
+
+  button {
+    background-color: transparent;
+    border-style: solid;
+    border: 2px solid grery;
+    cursor: pointer;
+  }
+  input {
+    background-color: var(--primary2);
+    border: 0;
+    margin: 4px;
+  }
   `

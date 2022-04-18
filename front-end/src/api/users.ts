@@ -1,42 +1,53 @@
-import { PaginatedObject, Rol, User, ApiOperation, OperationResult } from "./types"
-import { ApiResponseHandler } from "./utils"
+import { PaginatedObject, User, ApiOperation } from "./types"
+import { ApiResponseHandler, getUserToken } from "./utils"
 
 const URL = `${process.env.REACT_APP_BACKEND_URL}/users`
 
 export const getUsers = async () : Promise<PaginatedObject<User>> => {
-  return new Promise((resolve) => {
-    resolve({
-      data: [{
-        id: '1',
-        username: 'pepelin',
-        rol: Rol.MANAGER
-      }, {
-        id: '2',
-        username: 'pepelin',
-        rol: Rol.MANAGER
-      }],
-      meta: {
-        total: 1,
-        offset: 0
-      }
-    })
-  }) 
+  return fetch(`${URL}?count=1000`, {
+    headers: {
+      authentication: getUserToken(),
+    }
+  })
+    .then(r => r.json())
+    .catch(e => console.log(e))
 }
 
-export const updateUser = async (user: User) : Promise<ApiOperation> => {
-  console.log('Updating with', user)
-  return new Promise((resolve) => {
-    resolve({
-      result: OperationResult.SUCESS,
-      messages:[]
-    })
-  }) 
+export const updateUser = async (user: User) => {
+  return fetch(`${URL}`, {
+    method: 'PUT',
+    headers: {
+      authentication: getUserToken(),
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(user)
+  })
+}
+
+export const createUserApi = async (user: User) => {
+  return fetch(`${URL}`, {
+    method: 'POST',
+    headers: {
+      authentication: getUserToken(),
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(user)
+  })
+}
+
+export const deleteUserApi = async (userId : string) => {
+  return fetch(`${URL}/${userId}`, {
+    method: 'DELETE',
+    headers: {
+      authentication: getUserToken()
+    }
+  })
 }
 
 export const login = async ({
   username,
   password
-}: { username: string, password: string }) : Promise<any> => {
+}: { username: string, password: string }) : Promise<ApiOperation> => {
   return fetch(`${URL}/login?`, {
     method: 'POST',
     headers: {
@@ -50,7 +61,7 @@ export const login = async ({
   .then(ApiResponseHandler)
 }
 
-export const logout = async (token: string) : Promise<any> => {
+export const logout = async (token: string) : Promise<ApiOperation> => {
   return fetch(`${URL}/logout?`, {
     method: 'POST',
     headers: {
@@ -58,6 +69,19 @@ export const logout = async (token: string) : Promise<any> => {
     },
     body: JSON.stringify({
       token
+    })
+  })
+  .then(ApiResponseHandler)
+}
+
+export const register = async (username : string) : Promise<ApiOperation> => {
+  return fetch(`${URL}/register?`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      username
     })
   })
   .then(ApiResponseHandler)

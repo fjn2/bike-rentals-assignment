@@ -23,7 +23,7 @@ const InMemoryDb = function({
 }) {
   console.log('InMemoryDb - initialization')
   const data = withMockedData ? generateMockedData() : initialDbStructure;
-
+    
   this.create = async (resource, newItem) => {
     debug('create', resource, newItem)
     const id = uuidv4()
@@ -35,15 +35,27 @@ const InMemoryDb = function({
     return data[resource][id]
   }
 
-  this.update = async (resource, id, data) => {
-    data[resource][id] = data
+  this.update = async (resource, id, newData) => {
+    debug('update', resource, id, newData)
+    if (!data[resource][id]) {
+      return null
+    }
+    data[resource][id] = {
+      id,
+      ...newData
+    }
+    return data[resource][id]
   }
 
   this.delete = async (resource, id) => {
+    debug('delete', resource, id)
+    const exists = !!data[resource][id]
     delete data[resource][id]
+    return exists
   }
 
   this.getOne = async (resource, id) => {
+    debug('getOne', resource, id)
     return data[resource][id]
   }
 
@@ -52,8 +64,8 @@ const InMemoryDb = function({
     const allItemsKeys = Object.keys(data[resource]).filter((key) => {
       let itemMatchWithCriteria = true
       Object.keys(filterCriteria).forEach((resourceFieldName) => {
-        // for number and string match the exact number
-        if (['number', 'string'].includes(typeof filterCriteria[resourceFieldName])) {
+        // for number, boolean and string match the exact number
+        if (['number', 'string', 'boolean'].includes(typeof filterCriteria[resourceFieldName])) {
           if (filterCriteria[resourceFieldName] !== data[resource][key][resourceFieldName]) {
             itemMatchWithCriteria = false
           }
@@ -89,6 +101,11 @@ const InMemoryDb = function({
       }
     }
   }
+
+  /**
+   * Using for monitoring and debugging
+   */
+  this.getAllData = () => data
 
   return this
 }

@@ -1,8 +1,14 @@
 import { useEffect, useState } from "react"
-import { getFirstPage, getNextPage } from "../services/bikes"
+import {
+  getFirstPage,
+  getNextPage,
+  createBike as createBikeSvc,
+  updateBike as updateBikeSvc,
+  deleteBike as deleteBikeSvc
+} from "../services/bikes"
 import { reserveBike } from "../services/reservations"
 
-import { useNavigate, useSearchParams } from "react-router-dom"
+import { useSearchParams } from "react-router-dom"
 
 const useBikeListPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -30,14 +36,35 @@ const useBikeListPage = () => {
     }
   }
 
-  useEffect(() => {
-    setLoading(true)
+  const createBike = () => {
+    return createBikeSvc().then(() => {
+      loadFirstPage()
+    })
+  }
 
+  const updateBike = (data) => {
+    return updateBikeSvc(data).then(() => {
+      loadFirstPage()
+    })
+  }
+  
+  const deleteBike = (data) => {
+    return deleteBikeSvc(data).then(() => {
+      loadFirstPage()
+    })
+  }
+
+  const loadFirstPage = () => {
+    setLoading(true)
     getFirstPage(filters, meta).then(({data, meta}) => {
       setBikes(data)
       setMeta(meta)
       setLoading(false)
     })
+  }
+
+  useEffect(() => {
+    loadFirstPage()
     setSearchParams(filters)
   }, [filters])
 
@@ -49,7 +76,10 @@ const useBikeListPage = () => {
   }, {
     setFilters,
     nextPage,
-    reserveBike
+    reserveBike,
+    createBike,
+    updateBike,
+    deleteBike
   }]
 }
 

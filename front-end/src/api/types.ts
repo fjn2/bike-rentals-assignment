@@ -14,7 +14,7 @@ export type Bike = {
   model: string;
   color: string;
   location: Location;
-  rating: number;
+  rating?: number;
   available: boolean;
 }
 
@@ -34,15 +34,9 @@ export type User = {
   rol: Rol
 }
 
-export enum OperationResult {
-  SUCESS,
-  ERROR
-}
-
 export type ApiOperation = {
-  result: OperationResult,
-  messages: string[],
-  error?: string[]
+  data: any,
+  errors?: string[]
 }
 
 export type Pagination = {
