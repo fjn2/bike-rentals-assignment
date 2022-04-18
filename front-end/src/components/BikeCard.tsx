@@ -83,7 +83,7 @@ border: 0;
       text-align: right;
       margin-right: 18px;
     }
-    input {
+    > input {
       flex: 1;
     }
   }
@@ -107,7 +107,7 @@ border: 0;
   border: 0;
 }
 .available-checkbox {
-  height: 20px;
+  transform: scale(1.3);
   accent-color: var(--primary3); 
 }
 
@@ -202,12 +202,14 @@ const BikeCard = ({
                 </div>
                 <div>
                   <label>Available</label>
-                  <input
-                    type="checkbox"
-                    className="available-checkbox"
-                    checked={available}
-                    onChange={(e) => { setAvailable(e.target.checked)}}
-                  />
+                  <div style={{ width: '188px' }}>
+                    <input
+                      type="checkbox"
+                      className="available-checkbox"
+                      checked={available}
+                      onChange={(e) => { setAvailable(e.target.checked)}}
+                    />
+                  </div>
                 </div>
                 <button
                   className="update"

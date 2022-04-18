@@ -4,7 +4,7 @@ import { getUserToken, ApiResponseHandler } from './utils'
 
 const URL = `${process.env.REACT_APP_BACKEND_URL}/reservations`
 
-export const getReservations = async (pagination: Pagination) : Promise<PaginatedObject<Reservation>> => {
+export const getReservations = async (filters: any, pagination: Pagination) : Promise<PaginatedObject<Reservation>> => {
   return fetch(`${URL}?${qs.stringify({ ...pagination })}`, {
     headers: {
       authentication: getUserToken()

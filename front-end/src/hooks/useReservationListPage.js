@@ -3,7 +3,6 @@ import { getFirstPage, getNextPage, updateReservation} from "../services/reserva
 import useApplication from "./useApplication"
 import {
   cancelReservation as cancelReservationSvc,
-  updateRating as updateRatingSvc
 } from "../services/reservations"
 
 const useReservationListPage = () => {
@@ -18,7 +17,7 @@ const useReservationListPage = () => {
     }
     const hasMore = meta.total - (meta.offset + meta.count) > 0
 
-    if (!loading && hasMore) {
+    if (!loading && hasMore && user) {
       setLoading(true)
       getNextPage({
         userId: user.id
@@ -45,8 +44,10 @@ const useReservationListPage = () => {
   }
 
   useEffect(() => {
-    loadFirstPage()
-  }, [])
+    if (user) {
+      loadFirstPage()
+    }
+  }, [user])
 
   const cancelReservation = (data) => {
     cancelReservationSvc(data).then(() => {

@@ -8,7 +8,7 @@ import {
 const PAGE_SIZE = 10
 
 export const getFirstPage = (filters) => {
-  return getReservations(filters)
+  return getReservations(filters, { count: PAGE_SIZE * 100, offset: 0 })
 }
 
 export const getNextPage = (filters, meta) => {

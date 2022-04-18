@@ -75,7 +75,7 @@ const MenuComponent = () => {
           </button>
         </li>
         {
-          user.rol === 'manager' && (
+          (user || {}).rol === 'manager' && (
             <li className={activeSection === '/users'? 'active' : ''}>
               <button onClick={() => { onSectionClick('/users') }}>
                 <FontAwesomeIcon icon={faUser} />
