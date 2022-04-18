@@ -1,7 +1,7 @@
 import { getUsers, updateUser, createUserApi, deleteUserApi } from "../api/users"
 
-export const getFirstPage = (filters) => {
-  return getUsers(filters)
+export const getFirstPage = (filters, pagination) => {
+  return getUsers(filters, pagination)
 }
 
 export const update = (user) => {

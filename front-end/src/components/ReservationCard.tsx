@@ -115,7 +115,7 @@ const ReservationCard = ({reservation, onCancelReservation, onUpdateRating}: { r
           <p>{((reservation.bike || {}).location || {}).description}</p>
           {
             user.rol === 'manager' && (
-              <p>{((reservation.user || {}).username)}</p>
+              <p style={{fontSize: '10px',margin: 0, padding: 0 }}>{((reservation.user || {}).username)}</p>
             )
           }
         </div>

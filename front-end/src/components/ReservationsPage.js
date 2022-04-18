@@ -15,8 +15,7 @@ const ListItems = styled.div`
   display: flex;
   height: auto;
   flex-wrap: wrap;
-  overflow-x: hidden;
-  // overflow-y: scroll;
+  overflow: hidden;
   gap: 4px;
 
   & > div {
@@ -37,7 +36,7 @@ const ListItems = styled.div`
 `
 
 const ReservationsListPage = () => {
-  const [{ reservations, loading, filters }, { nextPage, cancelReservation, updateRating, setFilters }] = useReservationListPage()
+  const [{ reservations, loading, filters, allBikes, allUsers }, { nextPage, cancelReservation, updateRating, setFilters }] = useReservationListPage()
   const [{ user }] = useApplication()
   const cancelHandler = (reservationId) => () => {
     cancelReservation(reservationId)
@@ -82,8 +81,18 @@ const ReservationsListPage = () => {
       {
         user && user.rol === 'manager' && (
           <div>
-            <input type="text" placeholder="user id" onChange={(e) => updateFilter('userId', e.target.value)} />
-            <input type="text" placeholder="bike id" onChange={(e) => updateFilter('bikeId', e.target.value)} />
+            <select onChange={(e) => updateFilter('userId', e.target.value)}>
+              <option value="">NONE</option>
+              {allUsers.map(user => (
+                <option value={user.id}>{user.username}</option>
+              ))}
+            </select>
+            <select onChange={(e) => updateFilter('bikeId', e.target.value)}>
+              <option value="">NONE</option>
+              {allBikes.map(bike => (
+                <option value={bike.id}>{bike.model} - {bike.color}</option>
+              ))}
+            </select>
           </div>
         )
       }

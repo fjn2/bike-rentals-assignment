@@ -1,10 +1,12 @@
 import { PaginatedObject, User, ApiOperation } from "./types"
 import { ApiResponseHandler, getUserToken } from "./utils"
+import qs from 'qs'
 
 const URL = `${process.env.REACT_APP_BACKEND_URL}/users`
 
-export const getUsers = async () : Promise<PaginatedObject<User>> => {
-  return fetch(`${URL}?count=1000`, {
+// @ts-ignore
+export const getUsers = async (filters, pagination = { count: 1000 }) : Promise<PaginatedObject<User>> => {
+  return fetch(`${URL}?${qs.stringify({ ...filters, ...pagination })}`, {
     headers: {
       authentication: getUserToken(),
     }

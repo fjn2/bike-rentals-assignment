@@ -1,5 +1,11 @@
 import { useEffect, useState } from "react"
 import { getFirstPage, getNextPage, updateReservation} from "../services/reservations"
+import {
+  getFirstPage as getFirstBikesPage
+} from "../services/bikes"
+import {
+  getFirstPage as getFirstUsersPage
+} from "../services/users"
 import useApplication from "./useApplication"
 import {
   cancelReservation as cancelReservationSvc,
@@ -7,6 +13,9 @@ import {
 
 const useReservationListPage = () => {
   const [reservations, setReservations] = useState([])
+  const [allUsers, setAllUsers] = useState([])
+  const [allBikes, setAllBikes] = useState([])
+
   // filters are only used by managers
   const [filters, setFilters] = useState({})
   const [loading, setLoading] = useState(false)
@@ -53,6 +62,17 @@ const useReservationListPage = () => {
     }
   }, [user, filters])
 
+  useEffect(() => {
+    if (user && user.rol === 'manager') {
+      getFirstBikesPage({}, { count: 9999 }).then((resp) => {
+        setAllBikes(resp.data)
+      })
+      getFirstUsersPage({}, { count: 9999 }).then((resp) => {
+        setAllUsers(resp.data)
+      })
+    }
+  }, [user])
+  
   const cancelReservation = (data) => {
     cancelReservationSvc(data).then(() => {
       loadFirstPage()
@@ -73,6 +93,8 @@ const useReservationListPage = () => {
     loading,
     filters,
     meta,
+    allBikes,
+    allUsers
   }, {
     setFilters,
     nextPage,

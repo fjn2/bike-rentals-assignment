@@ -2,8 +2,8 @@ import { getBikes, createBikeApi, updateBikeApi, deleteBikeApi } from "../api/bi
 
 const PAGE_SIZE = 10
 
-export const getFirstPage = (filters) => {
-  return getBikes(filters)
+export const getFirstPage = (filters, pagination) => {
+  return getBikes(filters, pagination)
 }
 
 export const getNextPage = (filters, meta) => {
