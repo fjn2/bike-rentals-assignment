@@ -7,6 +7,8 @@ import {
 
 const useReservationListPage = () => {
   const [reservations, setReservations] = useState([])
+  // filters are only used by managers
+  const [filters, setFilters] = useState({})
   const [loading, setLoading] = useState(false)
   const [meta, setMeta] = useState()
   const [{ user }] = useApplication()
@@ -20,7 +22,8 @@ const useReservationListPage = () => {
     if (!loading && hasMore && user) {
       setLoading(true)
       getNextPage({
-        userId: user.id
+        ...filters,
+        userId: user.rol === 'manager' ? filters.userId : user.id,
       }, meta).then(({ data, meta: newMeta }) => {
         setReservations([
           ...reservations,
@@ -35,7 +38,8 @@ const useReservationListPage = () => {
   const loadFirstPage = () => {
     setLoading(true)
     return getFirstPage({
-      userId: user.id
+      ...filters,
+      userId: user.rol === 'manager' ? filters.userId : user.id,
     }, meta).then(({data, meta}) => {
       setReservations(data)
       setMeta(meta)
@@ -47,7 +51,7 @@ const useReservationListPage = () => {
     if (user) {
       loadFirstPage()
     }
-  }, [user])
+  }, [user, filters])
 
   const cancelReservation = (data) => {
     cancelReservationSvc(data).then(() => {
@@ -67,8 +71,10 @@ const useReservationListPage = () => {
   return [{
     reservations,
     loading,
+    filters,
     meta,
   }, {
+    setFilters,
     nextPage,
     cancelReservation,
     updateRating

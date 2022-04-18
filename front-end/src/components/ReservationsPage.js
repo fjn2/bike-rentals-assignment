@@ -4,6 +4,7 @@ import { useEffect, useCallback } from 'react'
 import NoResultPage from './NoResultsPage'
 import MenuComponent from './MenuComponent'
 import useReservationListPage from '../hooks/useReservationListPage'
+import useApplication from '../hooks/useApplication'
 
 const Wrapper = styled.div`
   background: var(--primary2);
@@ -36,7 +37,8 @@ const ListItems = styled.div`
 `
 
 const ReservationsListPage = () => {
-  const [{ reservations, loading }, { nextPage, cancelReservation, updateRating }] = useReservationListPage()
+  const [{ reservations, loading, filters }, { nextPage, cancelReservation, updateRating, setFilters }] = useReservationListPage()
+  const [{ user }] = useApplication()
   const cancelHandler = (reservationId) => () => {
     cancelReservation(reservationId)
   }
@@ -68,8 +70,23 @@ const ReservationsListPage = () => {
     }
   }, [loading])
 
+  const updateFilter = (filterKey, filterValue) => {
+    setFilters({
+      ...filters,
+      [filterKey]: filterValue
+    })
+  }
+
   return (
     <>
+      {
+        user && user.rol === 'manager' && (
+          <div>
+            <input type="text" placeholder="user id" onChange={(e) => updateFilter('userId', e.target.value)} />
+            <input type="text" placeholder="bike id" onChange={(e) => updateFilter('bikeId', e.target.value)} />
+          </div>
+        )
+      }
       <Wrapper>
         {
           reservations && reservations.length === 0 && !loading && (

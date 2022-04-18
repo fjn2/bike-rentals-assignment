@@ -10,7 +10,8 @@ const bikeSvcInstance = new bikeSvc()
 const reservationSvc = function() {
   this.formatFilters = (query) => {
     return {
-      userId: query.userId
+      userId: query.userId || undefined,
+      bikeId: query.bikeId || undefined,
     }
   }
   this.getList = async (filters, pagination) => {

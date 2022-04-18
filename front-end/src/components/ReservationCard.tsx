@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBicycle, faUndo, faCancel } from '@fortawesome/free-solid-svg-icons'
 import { Reservation } from '../api/types'
 import RatingComponent from './RatingComponent'
+import useApplication from '../hooks/useApplication'
 
 const addDays = (date: string, daysToAdd: number) => {
   return new Date((new Date(date)).setDate((new Date(date).getDate() + daysToAdd))).toISOString().slice(0, 10)
@@ -94,6 +95,8 @@ border: 0px;
 `
 const ReservationCard = ({reservation, onCancelReservation, onUpdateRating}: { reservation: Reservation, onCancelReservation: () => void, onUpdateRating : (newRating : number) => void }) => {
   const [active, setActive] = useState(false)
+  // @ts-ignore
+  const [{ user }] = useApplication()
   const [currentRating, setCurrentRating] = useState<number>(reservation.rating)
   
   const onRatingChange = (val: number) => {
@@ -110,6 +113,11 @@ const ReservationCard = ({reservation, onCancelReservation, onUpdateRating}: { r
             <FontAwesomeIcon icon={faBicycle} color={(reservation.bike || {}).color} size="2x" />
           </a>
           <p>{((reservation.bike || {}).location || {}).description}</p>
+          {
+            user.rol === 'manager' && (
+              <p>{((reservation.user || {}).username)}</p>
+            )
+          }
         </div>
         <div className="flip-card-back">
           <button className="reserve-button" onClick={onCancelReservation}><FontAwesomeIcon size="2x" icon={faCancel} /></button>
