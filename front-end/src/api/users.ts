@@ -11,8 +11,7 @@ export const getUsers = async (filters, pagination = { count: 1000 }) : Promise<
       authentication: getUserToken(),
     }
   })
-    .then(r => r.json())
-    .catch(e => console.log(e))
+    .then(ApiResponseHandler)
 }
 
 export const updateUser = async (user: User) => {

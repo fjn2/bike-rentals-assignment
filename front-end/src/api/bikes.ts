@@ -1,6 +1,6 @@
 import qs from 'qs'
 import { Bike, PaginatedObject, BikeFilters, Pagination } from "./types"
-import { getUserToken } from './utils'
+import { getUserToken, ApiResponseHandler } from './utils'
 
 const URL = `${process.env.REACT_APP_BACKEND_URL}/bikes`
 
@@ -10,8 +10,7 @@ export const getBikes = async (filters: BikeFilters, pagination: Pagination) : P
       authentication: getUserToken()
     }
   })
-    .then(r => r.json())
-    .catch(e => console.log(e))
+  .then(ApiResponseHandler)
 }
 
 export const createBikeApi = async () => {

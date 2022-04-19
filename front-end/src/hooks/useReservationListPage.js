@@ -10,6 +10,7 @@ import useApplication from "./useApplication"
 import {
   cancelReservation as cancelReservationSvc,
 } from "../services/reservations"
+import { ApplicationErrorHandling } from "./utils"
 
 const useReservationListPage = () => {
   const [reservations, setReservations] = useState([])
@@ -66,10 +67,10 @@ const useReservationListPage = () => {
     if (user && user.rol === 'manager') {
       getFirstBikesPage({}, { count: 9999 }).then((resp) => {
         setAllBikes(resp.data)
-      })
+      }).catch(ApplicationErrorHandling)
       getFirstUsersPage({}, { count: 9999 }).then((resp) => {
         setAllUsers(resp.data)
-      })
+      }).catch(ApplicationErrorHandling)
     }
   }, [user])
   

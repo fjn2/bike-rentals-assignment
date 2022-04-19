@@ -9,6 +9,7 @@ import {
 import { reserveBike } from "../services/reservations"
 
 import { useSearchParams } from "react-router-dom"
+import { ApplicationErrorHandling } from "./utils"
 
 const useBikeListPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -56,11 +57,11 @@ const useBikeListPage = () => {
 
   const loadFirstPage = () => {
     setLoading(true)
-    getFirstPage(filters, meta).then(({data, meta}) => {
+    return getFirstPage(filters, meta).then(({data, meta}) => {
       setBikes(data)
       setMeta(meta)
       setLoading(false)
-    })
+    }).catch(ApplicationErrorHandling)
   }
 
   useEffect(() => {

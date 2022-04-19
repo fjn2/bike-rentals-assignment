@@ -56,7 +56,7 @@ const ListItems = styled.div`
   display: flex;
   height: auto;
   flex-wrap: wrap;
-  overflow-x: hidden;
+  overflow: hidden;
   
   gap: 4px;
 

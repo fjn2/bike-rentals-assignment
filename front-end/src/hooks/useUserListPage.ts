@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import { getFirstPage, update, create, remove } from "../services/users"
 import { User, Metadata } from "../api/types"
+import { ApplicationErrorHandling } from "./utils"
 
 const useUserListPage = () => {
   const [users, setUsers] = useState<User[]>([])
@@ -25,14 +26,14 @@ const useUserListPage = () => {
   }
 
   const loadFirstPage = () => {
-    getFirstPage().then(({ data, meta }) => {
+    return getFirstPage().then(({ data, meta }) => {
       setUsers(data)
       setMeta(meta)
     })
   }
 
   useEffect(() => {
-    loadFirstPage()
+    loadFirstPage().catch(ApplicationErrorHandling)
   }, [])
 
   return [{
