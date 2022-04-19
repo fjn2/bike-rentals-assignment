@@ -83,13 +83,13 @@ const ReservationsListPage = () => {
           <div>
             <select onChange={(e) => updateFilter('userId', e.target.value)}>
               <option value="">NONE</option>
-              {allUsers.map(user => (
+              {(allUsers || []).map(user => (
                 <option value={user.id}>{user.username}</option>
               ))}
             </select>
             <select onChange={(e) => updateFilter('bikeId', e.target.value)}>
               <option value="">NONE</option>
-              {allBikes.map(bike => (
+              {(allBikes || []).map(bike => (
                 <option value={bike.id}>{bike.model} - {bike.color}</option>
               ))}
             </select>

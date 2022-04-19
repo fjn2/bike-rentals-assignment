@@ -2,9 +2,9 @@ const { v4: uuidv4 } = require('uuid');
 const { faker } = require('@faker-js/faker')
 const RESOURCES = require('./resources')
 
-const BIKES_COUNT = 50
-const USERS_COUNT = 50
-const RESERVATION_COUNT = 50
+const BIKES_COUNT = 10
+const USERS_COUNT = 10
+const RESERVATION_COUNT = 5
 ////////////////////////
 /// MOCK FOR BIKES /////
 ////////////////////////
